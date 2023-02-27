@@ -8,18 +8,20 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import axios from "axios";
+//调用axios（包括拦截）
+import axios from "./axios";
 
-Vue.prototype.$axios = axios //全局挂载
+//全局挂载
+Vue.prototype.$axios = axios
 Vue.config.productionTip = false
+
+require("./mock.js")
 
 Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
   router,
   store,
-  components: { App },
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount('#app')

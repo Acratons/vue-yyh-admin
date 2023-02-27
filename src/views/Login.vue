@@ -11,7 +11,8 @@
             <el-input v-model="loginForm.password"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
-            <el-input v-model="loginForm.code"></el-input>
+            <el-input v-model="loginForm.code" style="width: 400px; float: left"></el-input>
+            <el-image :src="captchaImg" class="captchaImg"></el-image>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('loginForm')">立即创建</el-button>
@@ -31,7 +32,8 @@ export default {
       loginForm: {
         userName: '',
         password: '',
-        code:''
+        code:'',
+        token:''
       },
       rules: {
         userName: [
@@ -44,14 +46,20 @@ export default {
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { min: 5, max: 5, message: '长度为 5 个字符', trigger: 'blur' }
         ],
-      }
+      },
+      captchaImg:null
     };
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          this.$axios.post('/login', this.loginForm).then(res => {
+            const jwt = res.headers['authorization']
+            this.$store.commit('SET_TOKEN', jwt)
+
+            this.$router.push("/index")
+          })
         } else {
           console.log('error submit!!');
           return false;
@@ -60,7 +68,18 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    }
+    },
+    getCaptcha(){
+      this.$axios.get('/captcha').then(res => {
+        console.log('res', res)
+        this.loginForm.token = res.data.data.token
+        this.captchaImg = res.data.data.captchaImg
+      })
+    },
+
+  },
+  created() {
+    this.getCaptcha()
   }
 }
 </script>
