@@ -10,17 +10,20 @@ export default new Router({
     {//预加载形式
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      children:[
+        {
+          path: '/index',
+          name: 'Index',
+          component: () => import('../views/Index.vue')
+        }
+      ]
     },
     {//懒加载形式
       path: '/login',
       name: 'Login',
       component: () => import('../views/Login.vue')
     },
-    {
-      path: '/index',
-      name: 'Index',
-      component: () => import('../views/Index.vue')
-    }
+
   ]
 })
