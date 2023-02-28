@@ -16,7 +16,7 @@ const  request = axios.create({
  * 请求拦截 interceptors拦截器
  */
 request.interceptors.request.use(config => {
-  config.headers['Authorization'] = localStorage.getItem('token')  //拦截的东西
+  config.headers['PermList'] = localStorage.getItem('token')  //拦截的东西
   return config
 })
 /*

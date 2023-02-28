@@ -15,67 +15,56 @@
         </template>
       </el-menu-item>
     </router-link>
-    <el-submenu index="1">
+
+    <el-submenu :index="menu.name" v-for="menu in menuList">
       <template slot="title">
-        <i class="el-icon-odometer"></i>
-        <span>系统管理</span>
+        <i :class="menu.icon"></i>
+        <span>{{menu.title}}</span>
       </template>
 
-      <router-link to="/menu">
-        <el-menu-item index="1-1">
+      <router-link :to="item.path" v-for="item in menu.children">
+        <el-menu-item :index="item.path">
           <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>用户管理</span>
-          </template>
-        </el-menu-item>
-      </router-link>
-
-      <router-link to="/role">
-        <el-menu-item index="1-2">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>角色管理</span>
-          </template>
-        </el-menu-item>
-      </router-link>
-
-      <router-link to="/menu">
-        <el-menu-item index="1-3">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>菜单管理</span>
+            <i :class="item.icon"></i>
+            <span>{{item.title}}</span>
           </template>
         </el-menu-item>
       </router-link>
 
     </el-submenu>
-    <el-submenu index="2">
-      <template slot="title">
-        <i class="el-icon-location"></i>
-        <span>系统工具</span>
-      </template>
-      <el-menu-item index="2-1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>系统工具</span>
-        </template>
-      </el-menu-item>
-    </el-submenu>
-    <el-menu-item index="3">
-      <i class="el-icon-document"></i>
-      <span slot="title">数据字典</span>
-    </el-menu-item>
+
+
   </el-menu>
 </template>
 
 <script>
 export default {
-  name: "SideMenu"
+  name: "SideMenu",
+  data() {
+    return {
+      // menuList: this.$store.state.menus.menuList
+    }
+  },
+  computed: {
+    menuList: {
+      get(){
+        return this.$store.state.menus.menuList
+      }
+    }
+  },
+  methods:{
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+  }
 }
 </script>
 
 <style scoped>
-.el-menu-vertical-demo{
-  height: 100%;
-}
+  .el-menu-vertical-demo{
+    height: 100%;
+  }
 </style>

@@ -8,15 +8,17 @@
         <strong>vue-yyh-admin 后台管理系统</strong>
 
         <div class="header-avatar">
-          <el-avatar size="medium" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+          <el-avatar size="medium" :src="userInfo.avatar"></el-avatar>
 
           <el-dropdown>
             <span class="el-dropdown-link">
-              admin<i class="el-icon-arrow-down el-icon--right"></i>
+              {{userInfo.username}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/userCenter">个人中心</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -41,12 +43,37 @@ export default {
     SideMenu,
     Index
   },
+  data(){
+    return{
+      userInfo:{
+        id:'',
+        username:'',
+        avatar:''
+      }
+    }
+  },
+  created() {
+    this.getUserInfo()
+  },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+
+    async getUserInfo() {
+      await this.$axios.get('/sys/userInfo').then(res =>{
+        console.log(res)
+        this.userInfo = res.data.data
+      })
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+
+    //退出reset所有store
+    logout() {
+      this.$axios.post("/logout").then(res => {
+        localStorage.clear()
+        sessionStorage.clear()
+
+        this.$store.commit("resetState")
+
+        this.$router.push("/login")
+      })
     }
   }
 }
@@ -54,46 +81,57 @@ export default {
 </script>
 
 <style scoped>
-.header-avatar {
-  float: right;
-  width: 130px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409EFF;
-}
-.el-container {
-  padding: 0;
-  margin: 0;
-  height: 100vh;
-}
-.el-header {
-  background-color: #B3C0D1;
-  color: #333;
-  text-align: center;
-  line-height: 60px;
-}
+  .header-avatar {
+    float: right;
+    width: 130px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-container {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+  }
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
 
-.el-aside {
-  background-color: #D3DCE6;
-  color: #333;
-  text-align: left;
-  line-height: 200px;
-}
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: left;
+    line-height: 200px;
+  }
 
-.el-main {
-  background-color: #E9EEF3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-}
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
 
-body > .el-container {
-  margin-bottom: 40px;
-}
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+  a {
+    text-decoration: none;
+  }
+  a:link{text-decoration: none!important;  }
+  a:visited{text-decoration: none!important;  }
+  a:hover{text-decoration: none!important;  }
+  a:active{text-decoration: none!important;  }
+  a:focus{text-decoration: none!important;  }
+
+
+
 
 
 </style>
